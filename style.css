@@ -61,7 +61,34 @@ body {
 }
 
 #hamburger { display: none; cursor: pointer; color: var(--text-color); }
-.logo { font-size: 22px; font-weight: bold; color: var(--primary-color);}
+/* Logo Container */
+.logo {
+    height: 100%; /* Navbar ki height ke hisaab se */
+    display: flex;
+    align-items: center;
+    max-width: 150px; /* Aap apni marzi se width set kar sakte hain */
+}
+
+/* Logo Image */
+.nav-logo {
+    height: 130px; /* Navbar height 60px hai, to 45px perfect lagega */
+    width: auto;  /* Aspect ratio maintain rahega */
+    object-fit: contain;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect (Optional) */
+.nav-logo:hover {
+    transform: scale(1.05);
+}
+
+/* Mobile View ke liye adjustment */
+@media (max-width: 768px) {
+    .nav-logo {
+        height: 90px; /* Mobile par thoda chota */
+    }
+}
 .top {
   background-color: var(--bg-color);
 }
