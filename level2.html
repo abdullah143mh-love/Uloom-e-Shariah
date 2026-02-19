@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level-2 Uloom-e-Shariyah</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+
+<p class="top">Uloom-e-Shariyah</p>
+
+<nav class="navbar">
+    <div id="hamburger" onclick="toggleHamburger()">
+        <span class="material-symbols-outlined">menu</span>
+    </div>
+
+    <div class="logo">LOGO</div>
+
+    <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        
+        <li class="drop-down subject-section">
+            <a href="javascript:void(0)" class="drop-trigger subject-trigger" onclick="toggleDropdown(event, 'subjectMenu')">
+                Subjects
+            </a>
+ <ul id="subjectMenu" class="dropdown-box subject-dropdown">
+    <li><a href="subject-details.html?sub=Aqeedah - Kitab At Tauheed&level=2" class="subject-link color1">Aqeedah - Kitab At Tauheed</a></li>
+    <li><a href="subject-details.html?sub=Tafseer Modouee&level=2" class="subject-link color2">Tafseer Modouee</a></li>
+    <li><a href="fiqh-books.html" class="subject-link color3">Fiqh-ul-Ibadat</a></li>
+    <li><a href="subject-details.html?sub=Dawat Ila Allah&level=2" class="subject-link color4">Dawat Ila Allah</a></li>
+</ul>
+
+        </li>
+
+        <li class="drop-down notes-section">
+            <a href="javascript:void(0)" class="drop-trigger notes-trigger" onclick="toggleDropdown(event, 'notesMenu')">
+                Notes
+            </a>
+            <ul id="notesMenu" class="dropdown-box notes-dropdown">
+                <li><a href="upload-notes.html" class="notes-link">
+                    <span>Upload Notes</span> <span class="material-symbols-outlined">upload_file</span>
+                </a></li>
+                <li><a href="explore-notes.html" class="notes-link">
+                    <span>Explore Notes</span> <span class="material-symbols-outlined">document_search</span>
+                </a></li>
+            </ul>
+        </li>
+    </ul>
+
+<div class="profile-sec">
+    <div class="profile-wrapper" onclick="toggleDropdown(event, 'profileMenu')">
+        <div class="profile-avatar" id="navAvatar"><span class="material-symbols-outlined account-icon">account_circle</span></div>
+        <span class="username" id="navUsername">Guest</span>
+    </div>
+    <ul id="profileMenu" class="dropdown-box profile-dropdown">
+        <li class="guest-only"><a href="login.html" class="profile-link"><span class="material-symbols-outlined">login</span> Login</a></li>
+        <li class="guest-only"><a href="signup.html" class="profile-link"><span class="material-symbols-outlined">person_add</span> Signup</a></li>
+        
+        <li class="user-only"><a href="profile.html" class="profile-link"><span class="material-symbols-outlined">person</span> Profile</a></li>
+        <li class="user-only"><a href="settings.html" class="profile-link"><span class="material-symbols-outlined">settings</span> Settings</a></li>
+        <hr class="dropdown-divider">
+        <li class="user-only"><a href="#" class="profile-link logout-text" id="logoutBtn"><span class="material-symbols-outlined">logout</span> Logout</a></li>
+    </ul>
+</div>
+
+</nav>
+
+<header class="hero-section">
+    <div class="hero-container">
+        <div class="hero-info">
+            <div class="level-tag">Level <span id="headerLevel">2</span></div>
+            <h1 id="welcomeUser">Assalamualaikum, Guest!</h1>
+            <p class="slogan">Embark on a journey of sacred knowledge and spiritual growth with Uloom-e-Shariyah.</p>
+            
+<div class="main-progress-wrapper">
+  <div class="progress-labels">
+    <span>Overall Progress</span>
+    <span id="overallPercent">0%</span>
+</div>
+  <div class="progress-bar-bg">
+   <div class="progress-bar-fill" id="headerProgressBar" style="width: 0%;"></div>
+</div>
+</div>
+
+      <button class="continue-btn" id="heroBtn" onclick="window.location.href='#subject-cards'">
+        <span id="heroBtnText">Start Learning</span>
+    <span class="material-symbols-outlined">arrow_forward</span>
+    </button>
+</div>
+
+<div class="hero-image">
+  <img src="book.png" alt="Learning" id="heroBannerImg">
+</div>
+</div>
+</header>
+
+<section class="subjects-container" id="subject-cards">
+    <h2 class="section-title">Your Subjects</h2>
+    
+<div class="subject-grid">
+    <div class="subject-card" data-sub-id="Aqeedah">
+        <div class="card-icon color1-bg"><img src="Aqeedah.png" alt="Aqeedah" class="subject-img"></div>
+        <div class="card-info">
+            <h3>Aqeedah - Kitab At Tauheed</h3>
+            <p>18 Lessons</p>
+            <div class="subject-progress-wrapper">
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-Aqeedah" style="width: 0%;"></div></div>
+                <span id="text-Aqeedah">0%</span>
+            </div>
+            <a href="subject-details.html?sub=Aqeedah - Kitab At Tauheed&level=2" class="card-btn">Start Learning</a>
+        </div>
+    </div>
+
+    <div class="subject-card" data-sub-id="Tafseer">
+        <div class="card-icon color2-bg"><img src="Tafseer.png" alt="Tafseer" class="subject-img"></div>
+        <div class="card-info">
+            <h3>Tafseer Modouee</h3>
+            <p>25 Lessons</p>
+            <div class="subject-progress-wrapper">
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-Tafseer" style="width: 0%;"></div></div>
+                <span id="text-Tafseer">0%</span>
+            </div>
+            <a href="subject-details.html?sub=Tafseer Modouee&level=2" class="card-btn">Start Learning</a>
+        </div>
+    </div>
+
+    <div class="subject-card" data-sub-id="Fiqh">
+        <div class="card-icon color3-bg"><img src="Fiqh.png" alt="Fiqh" class="subject-img"></div>
+        <div class="card-info">
+            <h3>Fiqh-ul-Ibadat</h3>
+            <p style="color: #d4af37; font-weight: bold;">Includes: Taharah, Salaat & more</p>
+            <div class="subject-progress-wrapper">
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-Fiqh" style="width: 0%;"></div></div>
+                <span id="text-Fiqh">0%</span>
+            </div>
+            <a href="fiqh-books.html" class="card-btn" style="background: #2c3e50; color: white;">View All Books</a>
+        </div>
+    </div>
+
+    <div class="subject-card" data-sub-id="Dawat">
+        <div class="card-icon color4-bg"><img src="Dawat.png" alt="Dawat" class="subject-img"></div>
+        <div class="card-info">
+            <h3>Dawat Ila Allah</h3>
+            <p>15 Lessons</p>
+            <div class="subject-progress-wrapper">
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-Dawat" style="width: 0%;"></div></div>
+                <span id="text-Dawat">0%</span>
+            </div>
+            <a href="subject-details.html?sub=Dawat Ila Allah&level=2" class="card-btn">Start Learning</a>
+        </div>
+    </div>
+</div>
+
+</section>
+
+<button class="theme-switch" id="themeToggle">
+    <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+</button>
+
+<script src="script.js"></script>
+</body>
+</html>

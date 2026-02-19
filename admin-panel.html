@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Level Manager</title>
+    <link rel="stylesheet" href="auth-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <style>
+        /* --- Dark Mode Variables --- */
+        :root {
+            --bg-color: #f4f4f4;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --border-color: #ddd;
+            --input-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+            --input-bg: #2d2d2d;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            transition: 0.3s; 
+            margin: 0;
+            padding: 10px;
+        }
+
+        .auth-box.admin-box { 
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            max-width: 700px !important; 
+            margin: 30px auto; 
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* --- User Row Layout --- */
+        .user-row {
+            display: flex; 
+            flex-direction: column; /* Mobile by default */
+            align-items: center;
+            text-align: center;
+            padding: 20px; 
+            border: 1px solid var(--border-color); 
+            background: var(--card-bg);
+            border-radius: 12px; 
+            margin-bottom: 15px;
+            gap: 15px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        @media (min-width: 600px) {
+            .user-row {
+                flex-direction: row; /* Desktop side by side */
+                justify-content: space-between;
+                text-align: left;
+            }
+        }
+
+        .user-info h4 { margin: 0; font-size: 18px; }
+        .user-info p { margin: 2px 0; font-size: 14px; color: #95a5a6; }
+
+        /* --- Action Buttons --- */
+        .action-group {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            max-width: 320px;
+            justify-content: center;
+        }
+
+        .promote-btn, .demote-btn {
+            flex: 1;
+            padding: 12px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            color: white;
+            transition: 0.2s;
+            min-width: 100px;
+        }
+
+        .promote-btn { background: #27ae60; }
+        .demote-btn { background: #e67e22; }
+
+        .promote-btn:disabled, .demote-btn:disabled {
+            background: #ccc !important;
+            cursor: not-allowed;
+        }
+
+        .promote-btn:active:not(:disabled), .demote-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .search-area { margin-bottom: 25px; display: flex; gap: 10px; }
+        .search-area input { 
+            flex: 1; padding: 12px; border-radius: 8px; 
+            border: 1px solid var(--border-color); 
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        .theme-switch {
+            position: fixed; bottom: 25px; right: 25px;
+            background: #d4af37; color: white; width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 2000; border: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-box admin-box">
+        <h2 style="text-align: center; margin-bottom: 5px;">Admin Level Manager</h2>
+        <p style="text-align: center; color: #95a5a6; margin-bottom: 25px;">Promote/Demote students (Max Level 3)</p>
+
+        <div class="search-area">
+            <input type="text" id="searchEmail" placeholder="Enter student email...">
+            <button class="auth-btn" style= background: #d4af37; "width: auto; padding: 0 20px; margin: 0;" onclick="searchStudent()">Search</button>
+        </div>
+
+        <div id="userResult"></div>
+
+        <button class="auth-btn" style="background: #333; margin-top: 20px; width: 100%;" onclick="window.location.href='index.html'">Back to Home</button>
+    </div>
+</div>
+
+<button class="theme-switch" id="themeToggle">
+    <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = { 
+    apiKey: "AIzaSyB_MCKP6SPKloZpf_pHZBzy2vvkiJ3B7gk",
+    authDomain: "uloom-e-shariah.firebaseapp.com",
+    projectId: "uloom-e-shariah",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// --- THEME LOGIC ---
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+
+const applyTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+    themeIcon.innerText = theme === 'dark' ? 'light_mode' : 'dark_mode';
+    localStorage.setItem('theme', theme);
+};
+
+themeToggle.addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    applyTheme(isDark ? 'light' : 'dark');
+});
+applyTheme(localStorage.getItem('theme') || 'light');
+
+// --- SECURITY: ADMIN CHECK ---
+const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+async function checkAdmin() {
+    if (!loggedInUser) {
+        window.location.replace("login.html");
+        return;
+    }
+    const userRef = doc(db, "users", loggedInUser.uid);
+    const snap = await getDoc(userRef);
+    if (!snap.exists() || snap.data().role !== "admin") {
+        alert("Access Denied!");
+        window.location.replace("index.html");
+    }
+}
+checkAdmin();
+
+// --- SEARCH STUDENT ---
+window.searchStudent = async () => {
+    const email = document.getElementById('searchEmail').value.trim();
+    const resultDiv = document.getElementById('userResult');
+    if(!email) return alert("Please enter an email");
+
+    resultDiv.innerHTML = "<p style='text-align:center;'>Searching...</p>";
+
+    try {
+        const q = query(collection(db, "users"), where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+            resultDiv.innerHTML = "<p style='color:red; text-align:center;'>Student not found!</p>";
+            return;
+        }
+
+        resultDiv.innerHTML = "";
+        querySnapshot.forEach((userDoc) => {
+            const userData = userDoc.data();
+            const userId = userDoc.id;
+            const currentLvl = parseInt(userData.level) || 1;
+
+            const isMaxLevel = currentLvl >= 3;
+            const isMinLevel = currentLvl <= 1;
+
+            const row = document.createElement('div');
+            row.className = 'user-row';
+            row.innerHTML = `
+                <div class="user-info">
+                    <h4>${userData.name || 'Anonymous'}</h4>
+                    <p>${userData.email}</p>
+                    <p style="margin-top:8px;">
+                        <span style="background: #d4af3722; color: #d4af37; padding: 4px 12px; border-radius: 15px; font-weight: bold;">
+                            Level ${currentLvl}
+                        </span>
+                    </p>
+                </div>
+                <div class="action-group">
+                    <button class="demote-btn" 
+                        onclick="updateLevel('${userId}', ${currentLvl - 1})" 
+                        ${isMinLevel ? 'disabled' : ''}>
+                        ${isMinLevel ? 'Min Lvl' : 'Demote'}
+                    </button>
+
+                    <button class="promote-btn" 
+                        onclick="updateLevel('${userId}', ${currentLvl + 1})" 
+                        ${isMaxLevel ? 'disabled' : ''}>
+                        ${isMaxLevel ? 'Max Lvl' : 'Promote'}
+                    </button>
+                </div>
+            `;
+            resultDiv.appendChild(row);
+        });
+    } catch (e) { alert("Error: " + e.message); }
+};
+
+// --- UPDATE LEVEL LOGIC ---
+window.updateLevel = async (uid, newLevel) => {
+    const confirmMsg = newLevel > 1 ? `Update to Level ${newLevel}?` : "Demote to Level 1?";
+    if(!confirm(confirmMsg)) return;
+    
+    try {
+        const userRef = doc(db, "users", uid);
+        await updateDoc(userRef, { level: newLevel });
+        alert("Success! Level updated.");
+        searchStudent(); 
+    } catch (e) { alert("Update failed: " + e.message); }
+};
+</script>
+</body>
+</html>

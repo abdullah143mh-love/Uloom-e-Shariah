@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class List - Uloom-e-Shariyah</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" />
+    <style>
+        :root { 
+            --primary: #d4af37; 
+            --bg: #f4f4f4; 
+            --card: #ffffff; 
+            --text: #2c3e50; 
+            --border: #e0e0e0; 
+            --success: #27ae60;
+            --top-bg: #ffffff;
+        }
+        [data-theme="dark"] { 
+            --bg: #121212; 
+            --card: #1e1e1e; 
+            --text: #e0e0e0; 
+            --border: #333; 
+            --top-bg: #1e1e1e;
+        }
+        
+        body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; transition: 0.3s; }
+
+        /* --- Header Bar --- */
+        .header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: var(--top-bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .header-left { display: flex; align-items: center; gap: 60px; }
+        .top-title { font-weight: bold; margin: 0; font-size: 18px; }
+        
+        .back-btn-inline { 
+            background: none; border: none; color: var(--text); cursor: pointer; display: flex; align-items: center; 
+        }
+
+        .theme-switch {
+            background: none; border: none; color: var(--text); cursor: pointer;
+        }
+
+        /* --- Search Bar --- */
+        .search-wrapper {
+            background-color: var(--card); border-radius: 30px; border: 2px solid var(--border);
+            overflow: hidden; transition: 0.3s; position: relative;
+            width: 90%; max-width: 600px; margin: 20px auto;
+        }
+        .search-box { display: flex; align-items: center; padding: 2px 15px; }
+        .box { 
+            background: transparent; border: none; outline: none; padding: 10px; 
+            width: 100%; font-size: 16px; color: var(--text);
+        }
+
+        .search-wrapper.is-animating {
+            border-color: transparent;
+            background: linear-gradient(var(--card), var(--card)) padding-box, 
+                        linear-gradient(90deg, #81d4fa, #fff59d, #ad1457, #c8e6c9) border-box;
+            background-clip: padding-box, border-box;
+            background-size: 100% 100%, 400% 100%; 
+            animation: slideColors 2s linear infinite;
+        }
+        @keyframes slideColors { from { background-position: 0% 0%, 0% 0%; } to { background-position: 0% 0%, 100% 0%; } }
+
+        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+        
+        .subject-header { text-align: center; margin-bottom: 20px; }
+        .subject-header h1 { font-size: 22px; margin-bottom: 5px; color: var(--primary); }
+        .subject-header p { font-size: 14px; opacity: 0.7; }
+
+        /* Accordion */
+        .class-item { 
+            background: var(--card); border: 1px solid var(--border); 
+            border-radius: 15px; margin-bottom: 15px; transition: 0.3s; overflow: hidden;
+        }
+        .class-top { padding: 18px 20px; display: flex; justify-content: ce; align-items: center; cursor: pointer; }
+        .class-top span { font-weight: 600; }
+        
+        .class-content { max-height: 0; overflow: hidden; transition: 0.4s ease; background: rgba(0,0,0,0.02); }
+        .class-item.active .class-content { max-height: 600px; border-top: 1px solid var(--border); }
+        .class-item.active .expand-icon { transform: rotate(180deg); }
+
+        .resource-list { list-style: none; padding: 0; margin: 0; }
+        .resource-item { 
+            display: flex; align-items: center; gap: 15px; padding: 12px 20px; 
+            text-decoration: none; color: var(--text); border-bottom: 1px solid var(--border); transition: 0.2s;
+        }
+        .resource-item:hover { background: rgba(212, 175, 55, 0.1); }
+        .resource-info b { font-size: 14px; display: block; }
+        .resource-info small { font-size: 11px; opacity: 0.6; }
+
+        .complete-area { padding: 15px; text-align: center; }
+        .btn-done { 
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
+            background: var(--bg); color: var(--text); cursor: pointer; font-weight: 600; transition: 0.3s;
+        }
+        .btn-done.completed { background: var(--success); color: white; border-color: var(--success); }
+        
+        #noResultsMessage { text-align: center; display: none; margin-top: 20px; opacity: 0.6; }
+        .expand-icon { transition: 0.3s; }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <div class="header-left">
+            <button class="back-btn-inline" onclick="history.back()">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <p class="top-title">Uloom-e-Shariyah</p>
+        </div>
+<button class="theme-switch" id="themeToggle">
+<span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+</button>
+    </div>
+
+    <div class="search-wrapper" id="searchWrapper">
+        <div class="search-box">
+            <input type="text" placeholder="Search by class number (e.g. 01)..." class="box" id="mainSearchInput">
+            <span class="material-symbols-outlined">search</span> 
+        </div> 
+    </div>
+
+    <div class="container">
+        <div class="subject-header">
+            <h1 id="displaySubjectName">Loading...</h1>
+            <p id="displayLevel">Level Details</p>
+        </div>
+
+        <div id="classList"></div>
+        <div id="noResultsMessage">
+            <span class="material-symbols-outlined" style="font-size: 48px;">search_off</span>
+            <p>No classes match your search.</p>
+        </div>
+    </div>
+
+<script type="module">
+    // Firebase initialization code (Aapka purana wala yahan rahega)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, orderBy, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = { 
+        apiKey: "AIzaSyB_MCKP6SPKloZpf_pHZBzy2vvkiJ3B7gk",
+        authDomain: "uloom-e-shariah.firebaseapp.com",
+        projectId: "uloom-e-shariah"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+    const params = new URLSearchParams(window.location.search);
+    const subName = params.get('sub');
+    const levelNum = parseInt(params.get('level'));
+
+    // UI Updates
+    document.getElementById('displaySubjectName').innerText = subName || "Subject Details";
+    document.getElementById('displayLevel').innerText = "Level " + (levelNum || "1");
+
+    // --- SEARCH LOGIC (Only Class Number) ---
+    const searchInput = document.getElementById('mainSearchInput');
+    const searchWrapper = document.getElementById('searchWrapper');
+
+    searchInput.addEventListener('input', () => {
+        let val = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
+        const cards = document.querySelectorAll('.class-item');
+
+        cards.forEach(card => {
+            const classText = card.querySelector('.class-top span').innerText.toLowerCase(); // e.g. "class 01"
+            
+            if (classText.includes(val)) {
+                card.style.display = "block";
+                visibleCount++;
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        document.getElementById('noResultsMessage').style.display = visibleCount === 0 ? "block" : "none";
+    });
+
+    searchInput.addEventListener('focus', () => searchWrapper.classList.add('is-animating'));
+    searchInput.addEventListener('blur', () => searchWrapper.classList.remove('is-animating'));
+
+    // --- DARK MODE ---
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    const applyTheme = (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        themeIcon.innerText = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        localStorage.setItem('theme', theme);
+    };
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    applyTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+
+    // --- FETCH CLASSES ---
+    async function fetchClasses() {
+        const container = document.getElementById('classList');
+        try {
+            const q = query(collection(db, "classes"), where("subject", "==", subName), where("level", "==", levelNum), orderBy("classNumber", "asc"));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                renderStaticList(); 
+                return;
+            }
+
+            container.innerHTML = "";
+            querySnapshot.forEach(docSnap => renderClassItem(docSnap.data(), docSnap.id));
+
+        } catch (e) {
+            renderStaticList();
+        }
+    }
+
+    function renderStaticList() {
+        const container = document.getElementById('classList');
+        container.innerHTML = ""; 
+        for(let i=0; i < 5; i++) {
+            renderClassItem({ classNumber: "0" + i }, "static-" + i);
+        }
+    }
+
+    function renderClassItem(data, classId) {
+        const container = document.getElementById('classList');
+        const item = document.createElement('div');
+        item.className = `class-item`;
+        item.innerHTML = `
+            <div class="class-top" onclick="this.parentElement.classList.toggle('active')">
+                <span>Class ${data.classNumber}</span>
+                <span class="material-symbols-outlined expand-icon">expand_more</span>
+            </div>
+            <div class="class-content">
+                <div class="resource-list">
+                    <a href="${data.videoUrl || '#'}" class="resource-item">
+                        <span class="material-symbols-outlined">play_circle</span>
+                        <div class="resource-info"><b>Watch / Listen Lecture</b><small>Video & Audio content</small></div>
+                    </a>
+                    <a href="${data.quizUrl || '#'}" class="resource-item">
+                        <span class="material-symbols-outlined">quiz</span>
+                        <div class="resource-info"><b>Quiz</b><small>Test your knowledge</small></div>
+                    </a>
+                    <a href="${data.flashcardUrl || '#'}" class="resource-item">
+                        <span class="material-symbols-outlined">style</span>
+                        <div class="resource-info"><b>Flashcards</b><small>Quick revision</small></div>
+                    </a>
+                    <a href="${data.mindmapUrl || '#'}" class="resource-item">
+                        <span class="material-symbols-outlined">account_tree</span>
+                        <div class="resource-info"><b>Mind Map</b><small>Visual summary</small></div>
+                    </a>
+                </div>
+                <div class="complete-area">
+                    <button class="btn-done" onclick="markAsDone('${classId}', this)">Mark as Done</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(item);
+    }
+
+    window.markAsDone = async (classId, btn) => {
+        if(btn.classList.contains('completed')) return;
+        btn.innerText = "Completed ✓";
+        btn.classList.add('completed');
+        // Firebase logic same as before...
+    };
+
+    fetchClasses();
+</script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Uloom-e-Shariyah</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="auth-style.css"> 
+    <style>
+        /* --- Dark Mode Variables --- */
+        :root {
+            --bg-color: #f4f4f4;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --sub-text: #555;
+            --border-color: #eee;
+            --info-bg: #f9f9f9;
+            --saved-card-bg: #fff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --sub-text: #aaa;
+            --border-color: #333;
+            --info-bg: #2d2d2d;
+            --saved-card-bg: #2d2d2d;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            transition: 0.3s; 
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .profile-card { text-align: center; max-width: 600px !important; margin: 20px auto; background: var(--card-bg) !important; border: 1px solid var(--border-color); }
+        
+        .avatar-circle {
+            width: 80px; height: 80px; background: #c1d9e6; color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 15px; font-size: 35px; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .info-box {
+            text-align: left; background: var(--info-bg); padding: 15px; border-radius: 12px; margin-bottom: 20px;
+        }
+        .info-item { margin-bottom: 10px; font-size: 14px; color: var(--text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .info-item strong { color: var(--sub-text); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .level-badge {
+            display: inline-block; background: #d4af37; color: white;
+            padding: 5px 20px; border-radius: 20px; font-size: 14px;
+            font-weight: 600; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+        }
+
+        /* --- Saved Notes Section --- */
+        .saved-section { margin-top: 30px; text-align: left; }
+        .saved-section h3 { font-size: 18px; color: var(--text-color); border-bottom: 2px solid #d4af37; display: inline-block; margin-bottom: 15px; }
+        
+        .saved-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .saved-card {
+            background: var(--saved-card-bg); padding: 15px; border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 4px solid #d4af37; border-top: 1px solid var(--border-color);
+        }
+        .saved-info h4 { margin: 0; font-size: 15px; color: var(--text-color); }
+        .saved-info a { font-size: 12px; color: #3498db; text-decoration: none; font-weight: 600; }
+        
+        .remove-btn {
+            background: #ffeded22; color: #d32f2f; border: 1px solid #d32f2f; padding: 8px;
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center; transition: 0.2s;
+        }
+        .remove-btn:hover { background: #d32f2f; color: white; }
+        
+        .no-notes { text-align: center; color: var(--sub-text); font-style: italic; padding: 20px; }
+
+        /* Floating Theme Switch */
+        .theme-switch {
+            position: fixed; bottom: 25px; right: 25px;
+            background: none; color: var(--text-color); width: 50px; height: 50px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 2000; border: none;
+        }
+
+        hr { border: 0; border-top: 1px solid var(--border-color); margin: 25px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-box profile-card">
+            <div class="avatar-circle" id="avatar">
+                <span class="material-symbols-outlined" style="font-size: 50px;">account_circle</span>
+            </div>
+            <h2 id="p-name" style="color: var(--text-color);">Loading...</h2>
+            
+            <div class="level-badge" id="user-level-badge">Level --</div>
+            
+            <p class="subtitle" style="color: var(--sub-text);">Personal Dashboard</p>
+
+            <div class="info-box">
+                <div class="info-item">
+                    <strong>Full Name</strong>
+                    <span id="display-name">---</span>
+                </div>
+                <div class="info-item">
+                    <strong>Email Address</strong>
+                    <span id="display-email">---</span>
+                </div>
+                <div class="info-item">
+                    <strong>Current Standard</strong>
+                    <span id="display-level">Level --</span>
+                </div>
+            </div>
+
+            <div class="saved-section">
+                <h3><span class="material-symbols-outlined" style="vertical-align: middle;">bookmark</span> Saved Notes</h3>
+                <div id="savedNotesList" class="saved-grid">
+                    <p class="no-notes">Fetching your saved wisdom...</p>
+                </div>
+            </div>
+
+            <hr>
+            <button class="auth-btn" style="background: #d4af37;" onclick="window.location.href='index.html'">Go to Home</button>
+            <button class="auth-btn" style="background: transparent; color: var(--text-color); border: 1px solid var(--border-color); margin-top: 10px;" onclick="window.location.href='settings.html'">Account Settings</button>
+            
+            <div class="back-home" style="margin-top: 25px;">
+                <a href="#" id="logoutBtn" style="color: #d32f2f; text-decoration: none; font-weight: 600; font-size: 14px; border: 1px solid #d32f2f; padding: 8px 20px; border-radius: 8px;">Logout Account</a>
+            </div>
+        </div>
+    </div>
+
+    <button class="theme-switch" id="themeToggle">
+        <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+    </button>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = { 
+    apiKey: "AIzaSyB_MCKP6SPKloZpf_pHZBzy2vvkiJ3B7gk",
+    authDomain: "uloom-e-shariah.firebaseapp.com",
+    projectId: "uloom-e-shariah",
+    storageBucket: "uloom-e-shariah.firebasestorage.app",
+    messagingSenderId: "210360115259",
+    appId: "1:210360115259:web:938d886285f4412d3ebc1e"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // --- THEME LOGIC ---
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+
+  const applyTheme = (theme) => {
+      document.documentElement.setAttribute('data-theme', theme);
+      themeIcon.innerText = theme === 'dark' ? 'light_mode' : 'dark_mode';
+      localStorage.setItem('theme', theme);
+  };
+
+  themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      applyTheme(isDark ? 'light' : 'dark');
+  });
+  applyTheme(localStorage.getItem('theme') || 'light');
+
+  // --- USER PROFILE LOGIC ---
+  const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+  if (!loggedInUser) {
+      window.location.replace("login.html");
+  } else {
+      document.getElementById('p-name').textContent = loggedInUser.name;
+      document.getElementById('display-name').textContent = loggedInUser.name;
+      document.getElementById('display-email').textContent = loggedInUser.email;
+      
+      const levelText = `Level ${loggedInUser.level || 1}`;
+      document.getElementById('user-level-badge').textContent = levelText;
+      document.getElementById('display-level').textContent = levelText;
+      
+      const firstLetter = loggedInUser.name.charAt(0).toUpperCase();
+      document.getElementById('avatar').innerHTML = `<span>${firstLetter}</span>`;
+      
+      fetchMySavedNotes(loggedInUser.email);
+  }
+
+  async function fetchMySavedNotes(userEmail) {
+      const savedContainer = document.getElementById('savedNotesList');
+      const q = query(collection(db, "saved_notes"), where("userEmail", "==", userEmail));
+
+      try {
+          const querySnapshot = await getDocs(q);
+          savedContainer.innerHTML = "";
+
+          if (querySnapshot.empty) {
+              savedContainer.innerHTML = '<p class="no-notes">No notes saved yet.</p>';
+              return;
+          }
+
+          querySnapshot.forEach((documentSnap) => {
+              const data = documentSnap.data();
+              const noteId = documentSnap.id;
+
+              const card = document.createElement('div');
+              card.className = 'saved-card';
+              card.id = `note-${noteId}`;
+              card.innerHTML = `
+                  <div class="saved-info">
+                      <h4>${data.title}</h4>
+                      <a href="${data.fileUrl}" target="_blank">View PDF</a>
+                  </div>
+                  <button class="remove-btn" onclick="removeSavedNote('${noteId}')">
+                      <span class="material-symbols-outlined">delete</span>
+                  </button>
+              `;
+              savedContainer.appendChild(card);
+          });
+      } catch (error) {
+          console.error("Error fetching saved notes:", error);
+          savedContainer.innerHTML = '<p class="no-notes">Error loading notes.</p>';
+      }
+  }
+
+  window.removeSavedNote = async (id) => {
+      if (confirm("Are you sure you want to remove this saved note?")) {
+          try {
+              await deleteDoc(doc(db, "saved_notes", id));
+              const element = document.getElementById(`note-${id}`);
+              if(element) element.remove();
+              if (document.getElementById('savedNotesList').children.length === 0) {
+                  document.getElementById('savedNotesList').innerHTML = '<p class="no-notes">No notes saved yet.</p>';
+              }
+          } catch (error) {
+              alert("Error removing note: " + error.message);
+          }
+      }
+  };
+
+  document.getElementById('logoutBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('loggedInUser');
+      window.location.replace("login.html");
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Add New Class</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+    <style>
+    
+        body { font-family: 'Poppins', sans-serif; background: #f4f4f4; padding: 20px; }
+        .admin-card { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 12px; background: #d4af37; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-submit:hover { background: #b8962d; }
+        .message { text-align: center; margin-top: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="admin-card">
+    <h2>Add New Class</h2>
+    <form id="addClassForm">
+        <div class="form-group">
+            <label>Select Level</label>
+            <select id="classLevel" required>
+                <option value="1">Level 1</option>
+                <option value="2">Level 2</option>
+                <option value="3">Level 3</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select Subject</label>
+            <select id="classSubject" required>
+                <option value="Kitab-ut-Taharah">Kitab-ut-Taharah</option>
+                <option value="Tafseer-ul-Quran">Tafseer-ul-Quran</option>
+                <option value="Aqeedah-o-Manhaj">Aqeedah-o-Manhaj</option>
+                <option value="Kitab-us-Salaah">Kitab-us-Salaah</option>
+                <option value="Sirat-un-Nabi">Sirat-un-Nabi</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Class Number (e.g., 1, 2, 3)</label>
+            <input type="number" id="classNumber" placeholder="Enter Class Number" required>
+        </div>
+
+        <div class="form-group">
+            <label>Class Topic</label>
+            <input type="text" id="classTopic" placeholder="e.g., Introduction to Wudu" required>
+        </div>
+
+        <div class="form-group">
+            <label>Video URL (YouTube/Drive)</label>
+            <input type="url" id="videoUrl" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+            <label>Audio URL</label>
+            <input type="url" id="audioUrl" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+            <label>Quiz URL</label>
+            <input type="url" id="quizUrl" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+            <label>Flashcard URL</label>
+            <input type="url" id="flashcardUrl" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+            <label>Mind Map URL</label>
+            <input type="url" id="mindmapUrl" placeholder="https://...">
+        </div>
+
+        <button type="submit" class="btn-submit">Add Class to Database</button>
+        <div id="statusMsg" class="message"></div>
+    </form>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Aapka Firebase Config
+    const firebaseConfig = { 
+        apiKey: "AIzaSyB_MCKP6SPKloZpf_pHZBzy2vvkiJ3B7gk",
+        authDomain: "uloom-e-shariah.firebaseapp.com",
+        projectId: "uloom-e-shariah"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById('addClassForm');
+    const statusMsg = document.getElementById('statusMsg');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        statusMsg.innerText = "Uploading...";
+
+        const classData = {
+            level: parseInt(document.getElementById('classLevel').value),
+            subject: document.getElementById('classSubject').value,
+            classNumber: parseInt(document.getElementById('classNumber').value),
+            topic: document.getElementById('classTopic').value,
+            videoUrl: document.getElementById('videoUrl').value,
+            audioUrl: document.getElementById('audioUrl').value,
+            quizUrl: document.getElementById('quizUrl').value,
+            flashcardUrl: document.getElementById('flashcardUrl').value,
+            mindmapUrl: document.getElementById('mindmapUrl').value,
+            createdAt: serverTimestamp()
+        };
+
+        try {
+            // "classes" naam ke collection mein save hoga
+            await addDoc(collection(db, "classes"), classData);
+            statusMsg.style.color = "green";
+            statusMsg.innerText = "Class Added Successfully!";
+            form.reset(); // Form khali kar dena
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            statusMsg.style.color = "red";
+            statusMsg.innerText = "Error: Check Console";
+        }
+    });
+</script>
+</body>
+</html>
