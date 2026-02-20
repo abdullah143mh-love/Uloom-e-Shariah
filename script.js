@@ -25,37 +25,36 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- 3. AUTH UI ---
 function initAuthUI() {
     const user = getLoggedInUser();
+    
+    // UI Elements
     const guestLinks = document.querySelectorAll('.guest-only');
     const userLinks = document.querySelectorAll('.user-only');
     const navUsername = document.getElementById('navUsername');
     const navAvatar = document.getElementById('navAvatar');
-    const welcomeText = document.getElementById('welcomeUser');
-    const headerLevel = document.getElementById('headerLevel');
 
     if (user) {
-        const nameToDisplay = user.name || user.displayName || user.email?.split('@')[0] || "User";
-        if (navUsername) navUsername.textContent = nameToDisplay;
-        if (navAvatar) navAvatar.textContent = nameToDisplay.charAt(0).toUpperCase();
-        if (welcomeText) welcomeText.textContent = `Assalamualaikum, ${nameToDisplay}!`;
-        if (headerLevel) headerLevel.textContent = user.level || "1";
+        // User logged in hai
+        if (navUsername) navUsername.textContent = user.name;
+        if (navAvatar) navAvatar.textContent = user.name.charAt(0).toUpperCase();
 
         guestLinks.forEach(link => link.style.display = 'none');
         userLinks.forEach(link => link.style.display = 'flex');
 
         handleLevelRouting(user.level);
     } else {
-        if (navUsername) navUsername.textContent = "Guest";
-        if (navAvatar) navAvatar.textContent = "G";
-        
+        // User logged out hai
         guestLinks.forEach(link => link.style.display = 'flex');
         userLinks.forEach(link => link.style.display = 'none');
 
-        const publicPages = ["index.html", "login.html", "signup.html", ""];
-        if (!publicPages.includes(currentPage)) {
+        // Proteced pages ki list
+        const protectedPages = ["level2.html", "level3.html", "profile.html", "settings.html"];
+        if (protectedPages.includes(currentPage)) {
             window.location.href = "login.html";
         }
     }
 }
+
+
 
 // --- 4. DYNAMIC PROGRESS & AUTO-UPGRADE ---
 async function updateHomeProgress() {
@@ -113,14 +112,19 @@ async function updateHomeProgress() {
 
 // --- 5. ROUTING & ACCESS CONTROL ---
 function handleLevelRouting(userLevel) {
+    const user = getLoggedInUser();
+    if(!user) return; // Agar user hi nahi hai toh routing ki zaroorat nahi
+
     const correctPage = levelPages[userLevel] || "index.html";
     const allLevelPages = ["index.html", "level2.html", "level3.html"];
     
-    // Strict Lock: Agar galat level page par ho toh wapas bhej do
-    if (allLevelPages.includes(currentPage) && currentPage !== correctPage) {
-        if(currentPage === "index.html" && userLevel == 1) return;
+    // Normalize currentPage for comparison
+    let normalizedPath = currentPage === "" ? "index.html" : currentPage;
+
+    if (allLevelPages.includes(normalizedPath) && normalizedPath !== correctPage) {
+        // Level 1 user index.html par reh sakta hai
+        if(normalizedPath === "index.html" && userLevel == 1) return;
         
-        alert(`Access Denied! Please complete your current Level first.`);
         window.location.href = correctPage;
     }
 }
@@ -185,3 +189,4 @@ document.addEventListener('click', (e) => {
         window.location.href = "index.html";
     }
 });
+            
