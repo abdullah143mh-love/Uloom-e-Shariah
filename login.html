@@ -169,62 +169,55 @@
   });
   applyTheme(localStorage.getItem('theme') || 'light');
 
-  // --- LOGIN LOGIC ---
-  const loginForm = document.getElementById('loginForm');
+// --- LOGIN LOGIC UPDATE ---
+const loginForm = document.getElementById('loginForm');
 
-  if (loginForm) {
+if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const submitBtn = loginForm.querySelector('button');
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Authenticating...";
-
-      const email = loginForm.querySelector('input[type="email"]').value;
-      const password = loginForm.querySelector('input[type="password"]').value;
-
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        const userDocRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userDocRef);
-
-        let userData = {
-            uid: user.uid,
-            name: user.displayName || "User",
-            email: user.email,
-            level: 1,
-            role: "student"
-        };
-
-        if (userDoc.exists()) {
-            userData.level = userDoc.data().level || 1;
-            userData.role = userDoc.data().role || "student";
-            userData.name = userDoc.data().name || userData.name;
-        }
-
-        localStorage.setItem('loggedInUser', JSON.stringify(userData));
-
-        submitBtn.innerText = "Success! Redirecting...";
+        e.preventDefault();
         
-        setTimeout(() => {
-            if (userData.level === 2) {
-                window.location.replace("level2.html");
-            } else if (userData.level === 3) {
-                window.location.replace("level3.html");
-            } else {
-                window.location.replace("index.html");
-            }
-        }, 500);
+        const submitBtn = loginForm.querySelector('button');
+        const email = loginForm.querySelector('input[type="email"]').value;
+        const password = loginForm.querySelector('input[type="password"]').value;
 
-      } catch (error) {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Login";
-        alert("Login failed: " + error.message);
-      }
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Authenticating...";
+
+        try {
+            // Persistance ensure karta hai ki session switch par khatam na ho
+            await setPersistence(auth, browserLocalPersistence);
+            
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            const userDocRef = doc(db, "users", user.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            let userData = {
+                uid: user.uid,
+                name: userDoc.exists() ? userDoc.data().name : (user.displayName || "User"),
+                email: user.email,
+                level: userDoc.exists() ? (userDoc.data().level || 1) : 1,
+                role: userDoc.exists() ? (userDoc.data().role || "student") : "student"
+            };
+
+            // Local storage mein data save karein
+            localStorage.setItem('loggedInUser', JSON.stringify(userData));
+
+            submitBtn.innerText = "Success! Redirecting...";
+            
+            // Redirect based on level
+            const targetPage = levelPages[userData.level] || "index.html";
+            window.location.href = targetPage;
+
+        } catch (error) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Login";
+            alert("Login failed: " + error.message);
+        }
     });
-  }
+}
+
 </script>
 
 </body>
