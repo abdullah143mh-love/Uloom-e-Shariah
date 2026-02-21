@@ -88,6 +88,22 @@
         .auth-footer { color: var(--sub-text); }
         .auth-footer a { color: #d4af37; font-weight: 600; text-decoration: none; }
         .back-home a { color: var(--sub-text); text-decoration: none; font-size: 14px; }
+.input-group {
+    position: relative; /* Icon position ke liye */
+}
+
+.toggle-password {
+    cursor: pointer;
+    margin-left: auto; /* Icon ko right side dhakelne ke liye */
+    user-select: none;
+    font-size: 20px !important;
+    color: var(--sub-text) !important;
+}
+
+.toggle-password:hover {
+    color: var(--icon-color) !important;
+}
+        
     </style>
 </head>
 <body>
@@ -122,15 +138,18 @@
                     </select>
                 </div>
 
-                <div class="input-group">
-                    <span class="material-symbols-outlined">lock</span>
-                    <input type="password" id="regPass" placeholder="Password" required>
-                </div>
+<div class="input-group">
+    <span class="material-symbols-outlined">lock</span>
+    <input type="password" id="regPass" placeholder="Password" required>
+    <span class="material-symbols-outlined toggle-password" onclick="togglePasswordVisibility('regPass', this)">visibility_off</span>
+</div>
 
-                <div class="input-group">
-                    <span class="material-symbols-outlined">shield</span>
-                    <input type="password" id="confirmPass" placeholder="Confirm Password" required>
-                </div>
+<div class="input-group">
+    <span class="material-symbols-outlined">shield</span>
+    <input type="password" id="confirmPass" placeholder="Confirm Password" required>
+    <span class="material-symbols-outlined toggle-password" onclick="togglePasswordVisibility('confirmPass', this)">visibility_off</span>
+</div>
+
 
                 <button type="submit" class="auth-btn">Sign Up</button>
             </form>
@@ -225,6 +244,18 @@
       submitBtn.disabled = false;
     }
   });
+  
+  window.togglePasswordVisibility = function(inputId, icon) {
+    const passwordInput = document.getElementById(inputId);
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.innerText = "visibility"; // Aankh khuli dikhayega
+    } else {
+        passwordInput.type = "password";
+        icon.innerText = "visibility_off"; // Aankh par line dikhayega
+    }
+};
+
 </script>
 
 </body>
