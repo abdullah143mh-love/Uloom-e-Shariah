@@ -91,6 +91,22 @@
         .auth-footer { color: var(--sub-text); }
         .auth-footer a { color: #d4af37; font-weight: 600; text-decoration: none; }
         .back-home a { color: var(--sub-text); text-decoration: none; font-size: 14px; }
+.input-group {
+    position: relative; /* Icon position ke liye */
+}
+
+.toggle-password {
+    cursor: pointer;
+    margin-left: auto; /* Icon ko right side dhakelne ke liye */
+    user-select: none;
+    font-size: 20px !important;
+    color: var(--sub-text) !important;
+}
+
+.toggle-password:hover {
+    color: var(--icon-color) !important;
+}
+        
     </style>
 </head>
 <body>
@@ -110,10 +126,12 @@
                     <input type="email" placeholder="Email Address" required>
                 </div>
 
-                <div class="input-group">
-                    <span class="material-symbols-outlined">lock</span>
-                    <input type="password" placeholder="Password" required>
-                </div>
+<div class="input-group">
+    <span class="material-symbols-outlined">lock</span>
+    <input type="password" id="loginPass" placeholder="Password" required>
+    <span class="material-symbols-outlined toggle-password" onclick="togglePasswordVisibility('loginPass', this)">visibility_off</span>
+</div>
+
 
                 <div class="forgot-pass" style="text-align: right; margin-bottom: 15px;">
                     <a href="forgot-password.html" style="font-size: 12px; text-decoration: none;">Forgot Password?</a>
@@ -137,8 +155,21 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+// Is line ko dhyan se dekhein, setPersistence aur browserLocalPersistence add kiya gaya hai
+import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    setPersistence, 
+    browserLocalPersistence 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
   import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const levelPages = {
+    1: "index.html",
+    2: "level2.html",
+    3: "level3.html"
+};
 
   const firebaseConfig = { 
     apiKey: "AIzaSyB_MCKP6SPKloZpf_pHZBzy2vvkiJ3B7gk",
@@ -217,6 +248,17 @@ if (loginForm) {
         }
     });
 }
+
+window.togglePasswordVisibility = function(inputId, icon) {
+    const passwordInput = document.getElementById(inputId);
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.innerText = "visibility"; // Aankh khuli dikhayega
+    } else {
+        passwordInput.type = "password";
+        icon.innerText = "visibility_off"; // Aankh par line dikhayega
+    }
+};
 
 </script>
 
