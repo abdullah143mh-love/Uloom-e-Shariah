@@ -1,66 +1,190 @@
-// Signup Form handle karna
-const signupForm = document.getElementById('signupForm');
-
-if (signupForm) {
-    signupForm.addEventListener('submit', function(e) {
-        e.preventDefault(); // Page reload hone se rokna
-
-        const name = this.querySelectorAll('input')[0].value;
-        const email = this.querySelectorAll('input')[1].value;
-        const password = this.querySelectorAll('input')[2].value;
-        const confirmPassword = this.querySelectorAll('input')[3].value;
-
-        // 1. Check Password Match
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
-
-        // 2. Pehle se save users ko nikalna (agar hain toh)
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-
-        // 3. Check if user already exists
-        const userExists = users.find(user => user.email === email);
-        if (userExists) {
-            alert("This email is already registered!");
-            return;
-        }
-
-        // 4. Naya user save karna
-        users.push({ name, email, password });
-        localStorage.setItem('users', JSON.stringify(users));
-
-        alert("Account Created Successfully! Now you can Login.");
-        window.location.href = "login.html"; 
-        // Login page par bhejna
-    }, 500);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
-//----------------------------------------------
-
-// Login Form handle karna
-const loginForm = document.getElementById('loginForm');
-
-if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const email = this.querySelectorAll('input')[0].value;
-        const password = this.querySelectorAll('input')[1].value;
-
-        // 1. Saved users ko nikalna
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-
-        // 2. User dhundna aur password match karna
-        const user = users.find(u => u.email === email && u.password === password);
-
-        if (user) {
-            // User mil gaya! Ab session save karna
-            localStorage.setItem('loggedInUser', JSON.stringify(user));
-            alert("Welcome, " + user.name + "!");
-            window.location.href = "index.html"; // Homepage par bhejna
-        } else {
-            alert("Invalid Email or Password!");
-        }
-    });
+body {
+    background-color: #f4f4f4; /* Same as your home */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
+
+/* Label styling */
+.input-field {
+    margin-bottom: 20px;
+    text-align: left;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px; /* Box aur label ke beech ki doori */
+    margin-left: 5px;
+}
+
+/* Input group ko adjust karna */
+.input-group {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 5px 10px;
+    transition: 0.3s;
+}
+
+.input-group:focus-within {
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Icon style inside box */
+.input-group .material-symbols-outlined {
+    color: #888;
+    margin-right: 10px;
+}
+
+/* Input field inside group */
+.input-group input, .input-group select {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 10px 0;
+    font-size: 15px;
+}
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.auth-box {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    text-align: center;
+    border-top: 5px solid #ebe8e3; /* Matching your navbar color */
+}
+
+.logo {
+  margin-bottom: 20px;
+  }
+  
+h2 {
+  color: #333;
+  margin-bottom: 30px;
+  
+}
+
+.subtitle {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
+
+.input-group:focus-within {
+    border-color: #007BFF;
+    background: #fff;
+}
+
+.input-group span {
+    color: #888;
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 15px;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #333; /* Clean dark button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.auth-btn:hover {
+    background-color: #000;
+}
+
+.auth-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.auth-footer a {
+    color: #007BFF;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-home {
+    margin-top: 25px;
+}
+
+.back-home a {
+    font-size: 13px;
+    color: #888;
+    text-decoration: none;
+}
+
+/* Upload Page Special Style */
+#uploadProgress {
+    height: 10px;
+    border-radius: 5px;
+    margin: 15px 0;
+    appearance: none;
+}
+#uploadProgress::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 5px;
+}
+#uploadProgress::-webkit-progress-value {
+    background-color: #007BFF;
+    border-radius: 5px;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    background: #f8f9fa;
+    border: 1px dashed #ccc;
+    cursor: pointer;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    color: #666;
+}
+
+input[type="file"]:hover {
+    border-color: #007BFF;
+    background: #f0f7ff;
+}
+    
