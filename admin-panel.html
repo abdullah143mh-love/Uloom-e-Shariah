@@ -130,7 +130,7 @@
 
         <div class="search-area">
             <input type="text" id="searchEmail" placeholder="Enter student email...">
-            <button class="auth-btn" style= background: #d4af37; "width: auto; padding: 0 20px; margin: 0;" onclick="searchStudent()">Search</button>
+            <button class="auth-btn" style= "background: #d4af37; width: auto; padding: 0 20px; margin: 0;" onclick="searchStudent()">Search</button>
         </div>
 
         <div id="userResult"></div>
@@ -144,8 +144,10 @@
 </button>
 
 <script type="module">
+// 1. SARE IMPORTS TOP PAR HONGE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = { 
     apiKey: "AIzaSyB_MCKP6SPKloZpf_pHZBzy2vvkiJ3B7gk",
@@ -155,6 +157,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 // --- THEME LOGIC ---
 const themeToggle = document.getElementById('themeToggle');
@@ -172,19 +175,22 @@ themeToggle.addEventListener('click', () => {
 });
 applyTheme(localStorage.getItem('theme') || 'light');
 
-// --- SECURITY: ADMIN CHECK ---
-const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+// --- SECURITY: REAL-TIME ADMIN CHECK ---
 async function checkAdmin() {
-    if (!loggedInUser) {
-        window.location.replace("login.html");
-        return;
-    }
-    const userRef = doc(db, "users", loggedInUser.uid);
-    const snap = await getDoc(userRef);
-    if (!snap.exists() || snap.data().role !== "admin") {
-        alert("Access Denied!");
-        window.location.replace("index.html");
-    }
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const userRef = doc(db, "users", user.uid);
+            const snap = await getDoc(userRef);
+            // Agar document nahi hai ya role admin nahi hai
+            if (!snap.exists() || snap.data().role !== "admin") {
+                alert("Access Denied! Only Admins can enter.");
+                window.location.replace("index.html");
+            }
+        } else {
+            // Agar login hi nahi hai
+            window.location.replace("login.html");
+        }
+    });
 }
 checkAdmin();
 
@@ -242,12 +248,15 @@ window.searchStudent = async () => {
             `;
             resultDiv.appendChild(row);
         });
-    } catch (e) { alert("Error: " + e.message); }
+    } catch (e) { 
+        console.error(e);
+        alert("Search failed. Check your database rules."); 
+    }
 };
 
 // --- UPDATE LEVEL LOGIC ---
 window.updateLevel = async (uid, newLevel) => {
-    const confirmMsg = newLevel > 1 ? `Update to Level ${newLevel}?` : "Demote to Level 1?";
+    const confirmMsg = `Update to Level ${newLevel}?`;
     if(!confirm(confirmMsg)) return;
     
     try {
@@ -255,8 +264,12 @@ window.updateLevel = async (uid, newLevel) => {
         await updateDoc(userRef, { level: newLevel });
         alert("Success! Level updated.");
         searchStudent(); 
-    } catch (e) { alert("Update failed: " + e.message); }
+    } catch (e) { 
+        alert("Update failed: Insufficient Permissions."); 
+    }
 };
 </script>
+
 </body>
-</html>
+        </html>
+        
