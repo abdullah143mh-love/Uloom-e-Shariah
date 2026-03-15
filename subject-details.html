@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class List - Uloom-e-Shariyah</title>
+  <title>Class List - Uloom-e-Shariyah</title>
+  <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0" />
     <style>
         :root { 
@@ -25,109 +26,306 @@
         
         body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; transition: 0.3s; }
 
-        /* --- Header Bar --- */
-        .header-bar {
+/* --- Header Bar Fixed --- */
+.header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space create karega side items ke beech */
+    padding: 10px 15px;
+    background-color: var(--top-bg);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 20px; /* Ek fix height di hai */
+}
+
+/* --- Title Center Logic --- */
+.top { 
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold; 
+    margin: 0; 
+    font-size: 15px; 
+    white-space: nowrap;
+    color: var(--text);
+    pointer-events: none; /* Taki click navbar items par jaye */
+}
+
+/* Theme switch right mein hi rahega automatically */
+.theme-switch {
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    z-index: 1001; /* Title ke upar click ho sake */
+}
+
+        /* =========================================
+           3. NAVBAR & NAVIGATION
+           ========================================= */
+        .navbar {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 10px 15px;
-            background-color: var(--top-bg);
-            border-bottom: 1px solid var(--border);
+            align-items: center;
+            padding: 0 5%;
+            background: var(--navbar-bg);
+            height: 50px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
-            z-index: 1000;
-        }
-        .header-left { display: flex; align-items: center; gap: 60px; }
-        .top-title { font-weight: bold; margin: 0; font-size: 18px; }
-        
-        .back-btn-inline { 
-            background: none; border: none; color: var(--text); cursor: pointer; display: flex; align-items: center; 
+            z-index: 2000;
         }
 
-        .theme-switch {
-            background: none; border: none; color: var(--text); cursor: pointer;
+        #hamburger { display: none; cursor: pointer; color: var(--text-color);}
+        .logo { display: flex; align-items: center; max-width: 150px; }
+        .nav-logo { height: 130px; width: auto; transition: transform 0.3s ease; }
+        .nav-links { display: flex; list-style: none; gap: 20px; }
+        .nav-links a { text-decoration: none; color: var(--text-color); font-weight: 500; padding: 10px 15px; }
+
+        /* --- Dropdowns --- */
+        .dropdown-box { display: none; list-style: none; position: absolute; background: #ffffff; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .dropdown-box.show { display: flex; flex-direction: column; animation: fadeIn 0.4s ease forwards; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Links par hover effect (jese explore notes mein hai) */
+.subject-link:hover {
+    background: rgba(212, 175, 55, 0.1);
+    padding-left: 20px !important; /* Chota sa slide effect */
+    transition: 0.3s;
+}
+        .subject-dropdown { top: 60px; left: 0; min-width: 220px; border-top: 3px solid var(--primary-color)!important; }
+        .notes-dropdown { top: 50px; left: 0; min-width: 170px; border-top: 3px solid var(--primary-color)!important; }
+        .profile-dropdown { top: 65px; right: 0; min-width: 140px; border-top: 4px solid var(--primary-color)!important; }
+
+        .username {
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
+            max-width: 50px; 
+            display: inline-block;
         }
 
-        /* --- Search Bar --- */
+        /* =========================================
+           4. SEARCH BAR & ANIMATIONS
+           ========================================= */
         .search-wrapper {
-            background-color: var(--card); border-radius: 30px; border: 2px solid var(--border);
-            overflow: hidden; transition: 0.3s; position: relative;
-            width: 90%; max-width: 600px; margin: 20px auto;
-        }
-        .search-box { display: flex; align-items: center; padding: 2px 15px; }
-        .box { 
-            background: transparent; border: none; outline: none; padding: 10px; 
-            width: 100%; font-size: 16px; color: var(--text);
+            order: 2;
+            position: relative;
+            margin: 15px 0 15px 0; 
+            border-radius: 30px; 
+            border: 3px solid var(--border-color); 
+            overflow: hidden; 
+            transition: border-color 0.3s;
+            background: var(--card-bg);
+            width: 65%;  
+            height: 40px;
+            max-width: 600px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
+        .search-box {
+            position: relative;
+            width: 100%; 
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg); 
+            border-radius: 28px; 
+            z-index: 1; 
+        }
+
+        .box {
+            width: 100%;
+            padding: 6px 45px 6px 15px; 
+            font-size: 15px;
+            font-weight: bolder;
+            border: none; 
+            outline: none; 
+            background: transparent; 
+            color: var(--text-color);
+        }
+
+        #search-icon-inside {
+            position: absolute;
+            right: 15px; 
+            color: var(--text-color);
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        /* --- Search Bar Glow Animation --- */
         .search-wrapper.is-animating {
             border-color: transparent;
-            background: linear-gradient(var(--card), var(--card)) padding-box, 
-                        linear-gradient(90deg, #81d4fa, #fff59d, #ad1457, #c8e6c9) border-box;
+            background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box, 
+                        linear-gradient(90deg, hsla(197, 94%, 81%, 1), hsla(43, 96%, 69%, 1), hsla(337, 60%, 35%, 1), hsla(92, 87%, 82%, 1), hsla(49, 89%, 82%, 1), hsla(342, 15%, 61%, 1), hsla(4, 38%, 68%, 1)) border-box;
             background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
             background-size: 100% 100%, 400% 100%; 
-            animation: slideColors 2s linear infinite;
+            animation: slideColors 3s linear 1 forwards;
         }
-        @keyframes slideColors { from { background-position: 0% 0%, 0% 0%; } to { background-position: 0% 0%, 100% 0%; } }
 
-        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
+        .search-wrapper.is-focused {
+            border-color: transparent;
+            background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                        linear-gradient(90deg, hsla(197, 94%, 81%, 1), hsla(43, 96%, 69%, 1), hsla(337, 60%, 35%, 1), hsla(92, 87%, 82%, 1), hsla(49, 89%, 82%, 1), hsla(342, 15%, 61%, 1), hsla(4, 38%, 68%, 1)) border-box;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-size: 100% 100%, 100% 100%; 
+        }
+
+        @keyframes slideColors {
+            from { background-position: 0% 0%, 0% 0%; }
+            to { background-position: 0% 0%, 100% 0%; } 
+        }
+
+        /* =========================================
+           6. RESPONSIVE MEDIA QUERIES
+           ========================================= */
+        @media (max-width: 768px) {
+            #hamburger { display: block; order: 1;}
+            .logo { display: none; }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: var(--nav-height); 
+                left: 0; 
+                width: 100%;
+                background: var(--navbar-bg); 
+                padding: 10px 20px;
+                border-top: 1px solid var(--border-color);
+                box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+            }
+            .nav-links::before {
+                content: "";
+                display: block;
+                width: 100px; height: 100px; margin: 10px 10px 0 10px; 
+                background-image: url('logo.png'); background-size: contain; background-repeat: no-repeat; background-position: center;
+            }
+            .nav-links.active { display: flex; z-index: 1999; }
+            .profile-sec { order: 3; right: 0; left: 5px;}
+            .subject-dropdown, .notes-dropdown { position: static; width: 80px; margin: 5px ; }
+        }
+
+        @media (min-width: 769px) {
+            .navbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+            #hamburger { order: 1; }   
+            .logo      { order: 2; }   
+            .nav-links { order: 3; }   
+            .search-wrapper { 
+                order: 4; margin: 0 !important; width: 90% !important; max-width: 700px; padding: 10px auto 10px auto;
+            }
+            .profile-sec { order: 5; }
+            .username { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px; display: inline-block; }
+        }
         
+        /* --- Page Layout --- */
+        .container { max-width: 700px; margin: 0 auto; padding: 20px; }
         .subject-header { text-align: center; margin-bottom: 20px; }
         .subject-header h1 { font-size: 22px; margin-bottom: 5px; color: var(--primary); }
         .subject-header p { font-size: 14px; opacity: 0.7; }
 
         /* Accordion */
-        .class-item { 
-            background: var(--card); border: 1px solid var(--border); 
-            border-radius: 15px; margin-bottom: 15px; transition: 0.3s; overflow: hidden;
-        }
-        .class-top { padding: 18px 20px; display: flex; justify-content: ce; align-items: center; cursor: pointer; }
+        .class-item { background: var(--card); border: 1px solid var(--border); border-radius: 15px; margin-bottom: 15px; transition: 0.3s; overflow: hidden; }
+        .class-top { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .class-top span { font-weight: 600; }
-        
         .class-content { max-height: 0; overflow: hidden; transition: 0.4s ease; background: rgba(0,0,0,0.02); }
         .class-item.active .class-content { max-height: 600px; border-top: 1px solid var(--border); }
         .class-item.active .expand-icon { transform: rotate(180deg); }
-
         .resource-list { list-style: none; padding: 0; margin: 0; }
-        .resource-item { 
-            display: flex; align-items: center; gap: 15px; padding: 12px 20px; 
-            text-decoration: none; color: var(--text); border-bottom: 1px solid var(--border); transition: 0.2s;
-        }
+        .resource-item { display: flex; align-items: center; gap: 15px; padding: 12px 20px; text-decoration: none; color: var(--text); border-bottom: 1px solid var(--border); transition: 0.2s; }
         .resource-item:hover { background: rgba(212, 175, 55, 0.1); }
         .resource-info b { font-size: 14px; display: block; }
         .resource-info small { font-size: 11px; opacity: 0.6; }
-
         .complete-area { padding: 15px; text-align: center; }
-        .btn-done { 
-            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);
-            background: var(--bg); color: var(--text); cursor: pointer; font-weight: 600; transition: 0.3s;
-        }
+        .btn-done { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; font-weight: 600; transition: 0.3s; }
         .btn-done.completed { background: var(--success); color: white; border-color: var(--success); }
-        
         #noResultsMessage { text-align: center; display: none; margin-top: 20px; opacity: 0.6; }
         .expand-icon { transition: 0.3s; }
     </style>
 </head>
 <body>
 
-    <div class="header-bar">
-        <div class="header-left">
-            <button class="back-btn-inline" onclick="history.back()">
-                <span class="material-symbols-outlined">arrow_back</span>
-            </button>
-            <p class="top-title">Uloom-e-Shariyah</p>
-        </div>
-<button class="theme-switch" id="themeToggle">
-<span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
-</button>
+<div class="header-bar">
+    <div style="width: 40px;"></div> 
+
+    <p class="top">Uloom-e-Shariyah</p>
+
+    <button class="theme-switch" id="themeToggle">
+        <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+    </button>
+</div>
+
+<nav class="navbar">
+    <div id="hamburger" onclick="toggleHamburger()">
+        <span class="material-symbols-outlined">menu</span>
     </div>
 
     <div class="search-wrapper" id="searchWrapper">
         <div class="search-box">
-            <input type="text" placeholder="Search by class number (e.g. 01)..." class="box" id="mainSearchInput">
-            <span class="material-symbols-outlined">search</span> 
+            <input type="text" placeholder="Search notes..." class="box" id="mainSearchInput">
+            <span class="material-symbols-outlined" id="search-icon-inside">search</span> 
         </div> 
     </div>
+
+    <div class="logo">
+        <img src="logo.png" alt="Uloom-e-Shariyah Logo" class="nav-logo">
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        
+        <li class="drop-down subject-section">
+            <a href="javascript:void(0)" class="drop-trigger subject-trigger" onclick="toggleDropdown(event, 'subjectMenu')">
+                Subjects
+            </a>
+            <ul id="subjectMenu" class="dropdown-box subject-dropdown">
+                <li><a href="subject-details.html?sub=Kitab-ut-Taharah&level=1" class="subject-link color1">Kitab-ut-Taharah</a></li>
+                <li><a href="subject-details.html?sub=Tafseer-ul-Quran&level=1" class="subject-link color2">Tafseer-ul-Quran</a></li>
+                <li><a href="subject-details.html?sub=Aqeedah-o-Manhaj&level=1" class="subject-link color3">Aqeedah-o-Manhaj</a></li>
+                <li><a href="subject-details.html?sub=Kitab-us-Salaat&level=1" class="subject-link color4">Kitab-us-Salaat</a></li>
+                <li><a href="subject-details.html?sub=Sirat-un-Nabi&level=1" class="subject-link color5">Sirat-un-Nabi</a></li>              
+                </ul>
+        </li>
+
+        <li class="drop-down notes-section">
+            <a href="javascript:void(0)" class="drop-trigger notes-trigger" onclick="toggleDropdown(event, 'notesMenu')">
+                Notes
+            </a>
+            <ul id="notesMenu" class="dropdown-box notes-dropdown">
+                <li><a href="upload-notes.html" class="notes-link">
+                    <span>Upload Notes</span> <span class="material-symbols-outlined">upload_file</span>
+                </a></li>
+                <li><a href="explore-notes.html" class="notes-link">
+                    <span>Explore Notes</span> <span class="material-symbols-outlined">document_search</span>
+                </a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="profile-sec">
+        <div class="profile-wrapper" onclick="toggleDropdown(event, 'profileMenu')">
+            <div class="profile-avatar" id="navAvatar">
+                <span class="material-symbols-outlined account-icon">account_circle</span>
+            </div>
+            <span class="username" id="navUsername">Guest</span>
+        </div>
+        <ul id="profileMenu" class="dropdown-box profile-dropdown">
+            <li class="guest-only"><a href="login.html" class="profile-link"><span class="material-symbols-outlined">login</span>Login</a></li>
+            <li class="guest-only"><a href="signup.html" class="profile-link"><span class="material-symbols-outlined">person_add</span>Signup</a></li>
+            <li class="user-only"><a href="profile.html" class="profile-link"><span class="material-symbols-outlined">person</span>Profile</a></li>
+            <li class="user-only"><a href="settings.html" class="profile-link"><span class="material-symbols-outlined">settings</span>Settings</a></li>
+            <hr class="dropdown-divider">
+            <li class="user-only"><a href="#" class="profile-link logout-text" id="logoutBtn"><span class="material-symbols-outlined">logout</span>Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
 
     <div class="container">
         <div class="subject-header">
@@ -143,9 +341,8 @@
     </div>
 
 <script type="module">
-    // Firebase initialization code (Aapka purana wala yahan rahega)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs, orderBy, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyB_MCKP6SPKloZpf_pHZBzy2vvkiJ3B7gk",
@@ -159,80 +356,156 @@
 
     const params = new URLSearchParams(window.location.search);
     const subName = params.get('sub');
-    const levelNum = parseInt(params.get('level'));
+    // Level handle karne ka sahi tarika: URL se lo, nahi toh user data se, nahi toh Level 1 default
+    const levelNum = parseInt(params.get('level')) || (user ? parseInt(user.level) : 1);
 
-    // UI Updates
     document.getElementById('displaySubjectName').innerText = subName || "Subject Details";
-    document.getElementById('displayLevel').innerText = "Level " + (levelNum || "1");
+    document.getElementById('displayLevel').innerText = "Level " + levelNum;
 
-    // --- SEARCH LOGIC (Only Class Number) ---
-    const searchInput = document.getElementById('mainSearchInput');
-    const searchWrapper = document.getElementById('searchWrapper');
-
-    searchInput.addEventListener('input', () => {
-        let val = searchInput.value.toLowerCase().trim();
-        let visibleCount = 0;
-        const cards = document.querySelectorAll('.class-item');
-
-        cards.forEach(card => {
-            const classText = card.querySelector('.class-top span').innerText.toLowerCase(); // e.g. "class 01"
-            
-            if (classText.includes(val)) {
-                card.style.display = "block";
-                visibleCount++;
-            } else {
-                card.style.display = "none";
-            }
-        });
-
-        document.getElementById('noResultsMessage').style.display = visibleCount === 0 ? "block" : "none";
-    });
-
-    searchInput.addEventListener('focus', () => searchWrapper.classList.add('is-animating'));
-    searchInput.addEventListener('blur', () => searchWrapper.classList.remove('is-animating'));
-
-    // --- DARK MODE ---
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    
-    const applyTheme = (theme) => {
+    /* =========================================
+       1. THEME LOGIC (FIXED)
+       ========================================= */
+    function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         themeIcon.innerText = theme === 'dark' ? 'light_mode' : 'dark_mode';
         localStorage.setItem('theme', theme);
-    };
+    }
 
+    // Load saved theme
     const savedTheme = localStorage.getItem('theme') || 'light';
     applyTheme(savedTheme);
 
     themeToggle.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        applyTheme(current === 'dark' ? 'light' : 'dark');
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
     });
 
-    // --- FETCH CLASSES ---
+    /* --- 1. SUBJECT DROPDOWN GENERATOR --- */
+    const levelSubjects = {
+        "1": ["Taharah", "Tafseer", "Aqeedah", "Salaat", "Nabi"],
+        "2": ["Tauheed", "Tafseer-Modouee", "Dawat", "Fiqh-Janaiz", "Fiqh-Zakaat", "Fiqh-Rozah", "Fiqh-Hajj", "Fiqh-Jihaad"],
+        "3": ["Ikhlaq", "Shubuhaat", "Hadith", "Usool-Tafseer", "Nikah-Talaaq", "Ilhad", "Usool-Fiqh", "Buyoo"]
+    };
+
+    const navSubjectNames = {
+        "Taharah": "Kitab-ut-Taharah", "Tafseer": "Tafseer-ul-Quran", "Aqeedah": "Aqeedah-o-Manhaj", "Salaat": "Kitab-us-Salaat", "Nabi": "Sirat-un-Nabi"
+    };
+
+function generateNavbarSubjects() {
+    const subjectMenu = document.getElementById('subjectMenu');
+    if (!subjectMenu) return;
+    
+    const subjects = levelSubjects[String(levelNum)] || [];
+    subjectMenu.innerHTML = ''; 
+
+    subjects.forEach((sub, index) => {
+        const li = document.createElement('li');
+        const displayName = navSubjectNames[sub] || sub.replace('-', ' ');
+        const colorIndex = (index % 5) + 1; // 1 se 5 tak colors
+        
+        // Yahan 'subject-link' class add ki gayi hai explore notes ki tarah
+        li.innerHTML = `<a href="subject-details.html?sub=${encodeURIComponent(displayName)}&level=${levelNum}" 
+                           class="subject-link color${colorIndex}"
+                           style="padding: 10px 15px; display: block; text-decoration: none; color: var(--text); font-size: 14px; border-bottom: 1px solid var(--border); transition: 0.3s;">
+                           ${displayName}
+                        </a>`;
+        subjectMenu.appendChild(li);
+    });
+}
+// Link par click karne par chota sa scale effect
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('subject-link')) {
+        e.target.style.transform = "scale(0.95)";
+        e.target.style.opacity = "0.7";
+    }
+});
+
+
+    /* --- 2. SEARCH & ANIMATION --- */
+    const searchInput = document.getElementById('mainSearchInput');
+    const searchWrapper = document.getElementById('searchWrapper');
+
+    if(searchInput) {
+        searchInput.addEventListener('input', () => {
+            let val = searchInput.value.toLowerCase().trim();
+            let visibleCount = 0;
+            document.querySelectorAll('.class-item').forEach(card => {
+                const classText = card.querySelector('.class-top span').innerText.toLowerCase(); 
+                const match = classText.includes(val);
+                card.style.display = match ? "block" : "none";
+                if(match) visibleCount++;
+            });
+            document.getElementById('noResultsMessage').style.display = visibleCount === 0 ? "block" : "none";
+        });
+
+        searchInput.addEventListener('focus', () => {
+            searchWrapper.classList.remove('is-focused');
+            searchWrapper.classList.add('is-animating');
+        });
+
+        searchInput.addEventListener('blur', () => {
+            searchWrapper.classList.remove('is-focused', 'is-animating');
+        });
+    }
+
+    if(searchWrapper) {
+        searchWrapper.addEventListener('animationend', () => {
+            searchWrapper.classList.remove('is-animating');
+            searchWrapper.classList.add('is-focused');
+        });
+    }
+
+    /* --- 3. NAVIGATION & DROPDOWNS --- */
+    window.toggleHamburger = () => document.querySelector('.nav-links').classList.toggle('active');
+
+    window.toggleDropdown = (event, menuId) => {
+        event.stopPropagation();
+        document.querySelectorAll('.dropdown-box').forEach(m => {
+            if (m.id !== menuId) m.classList.remove('show');
+        });
+        document.getElementById(menuId).classList.toggle('show');
+    };
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.drop-down') && !e.target.closest('.profile-sec')) {
+            document.querySelectorAll('.dropdown-box').forEach(m => m.classList.remove('show'));
+        }
+    });
+
+    /* --- 4. AUTH UI --- */
+    function initAuthUI() {
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        const navUsername = document.getElementById('navUsername');
+        const navAvatar = document.getElementById('navAvatar');
+
+        if (loggedInUser) {
+            if (navUsername) navUsername.textContent = loggedInUser.name;
+            if (navAvatar) {
+                const firstLetter = loggedInUser.name.charAt(0).toUpperCase();
+                navAvatar.innerHTML = `<span style="font-weight:bold; color:white; font-size:16px;">${firstLetter}</span>`;
+                navAvatar.style.cssText = "display:flex; align-items:center; justify-content:center; background:#c1d9e6; border-radius:50%; width:25px; height:25px; border:1px solid #c4e1f0;";
+            }
+            document.querySelectorAll('.guest-only').forEach(l => l.style.display = 'none');
+            document.querySelectorAll('.user-only').forEach(l => l.style.display = 'flex');
+        }
+    }
+
+   /* --- DATA FETCHING --- */
     async function fetchClasses() {
         const container = document.getElementById('classList');
         try {
             const q = query(collection(db, "classes"), where("subject", "==", subName), where("level", "==", levelNum), orderBy("classNumber", "asc"));
             const querySnapshot = await getDocs(q);
-
-            if (querySnapshot.empty) {
-                renderStaticList(); 
-                return;
-            }
-
+            if (querySnapshot.empty) { renderStaticList(); return; }
             container.innerHTML = "";
             querySnapshot.forEach(docSnap => renderClassItem(docSnap.data(), docSnap.id));
-
-        } catch (e) {
-            renderStaticList();
-        }
+        } catch (e) { renderStaticList(); }
     }
 
     function renderStaticList() {
         const container = document.getElementById('classList');
         container.innerHTML = ""; 
-        for(let i=0; i < 5; i++) {
+        for(let i=1; i <= 5; i++) {
             renderClassItem({ classNumber: "0" + i }, "static-" + i);
         }
     }
@@ -273,14 +546,28 @@
         container.appendChild(item);
     }
 
-    window.markAsDone = async (classId, btn) => {
-        if(btn.classList.contains('completed')) return;
+    window.markAsDone = (id, btn) => {
         btn.innerText = "Completed ✓";
         btn.classList.add('completed');
-        // Firebase logic same as before...
     };
 
-    fetchClasses();
+    // Logout logic
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.onclick = () => {
+            localStorage.removeItem('loggedInUser');
+            window.location.href = "login.html";
+        };
+    }
+
+    // --- SAB KUCH RUN KAREIN ---
+    document.addEventListener('DOMContentLoaded', () => {
+        initAuthUI();
+        generateNavbarSubjects(); // Yeh line dropdown ko fill karegi
+        fetchClasses();
+    });
+    
 </script>
+
 </body>
-</html>
+</html> 
