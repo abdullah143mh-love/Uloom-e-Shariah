@@ -213,7 +213,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 
 const firebaseConfig = { 
     apiKey: "AIzaSyB_MCKP6SPKloZpf_pHZBzy2vvkiJ3B7gk",
@@ -230,6 +231,7 @@ const storage = getStorage(app);
 const db = getFirestore(app);
 
 // Subjects Data
+// Updated Subjects Data with Fiqh-ul-Ibadat Sub-topics
 const subjectsByLevel = {
     "1": [
         { val: "Taharah", text: "Kitab-ut-Taharah" },
@@ -240,21 +242,27 @@ const subjectsByLevel = {
     ],
     "2": [
         { val: "Tauheed", text: "Aqeedah - Kitab At Tauheed" },
-        { val: "Tafseer", text: "Tafseer Modouee" },
-        { val: "Ibadat", text: "Fiqh ul Ibadat" },
-        { val: "Dawat Ila Allah", text: "Dawat Ila Allah" }
+        { val: "Tafseer-Modouee", text: "Tafseer Modouee" },
+        { val: "Dawat", text: "Dawat Ila Allah" },
+        // Fiqh-ul-Ibadat ke subjects yahan add ho gaye:
+        { val: "Fiqh-Janaiz", text: "Fiqh: Kitab-ul-Janaiz" },
+        { val: "Fiqh-Zakaat", text: "Fiqh: Kitab-uz-Zakaat" },
+        { val: "Fiqh-Rozah", text: "Fiqh: Kitab-us-Siyam (Rozah)" },
+        { val: "Fiqh-Hajj", text: "Fiqh: Kitab-ul-Hajj" },
+        { val: "Fiqh-Jihaad", text: "Fiqh: Kitab-ul-Jihaad" }
     ],
     "3": [
-        { val: "Ikhlaq o Adaab", text: "Ikhlaq o Adaab" },      
-        { val: "Eman o Aqaid", text: "Eman o Aqaid se Mutaliqa Shubuhaat" },
+        { val: "Ikhlaq", text: "Ikhlaq o Adaab" },      
+        { val: "Shubuhaat", text: "Eman o Aqaid se Mutaliqa Shubuhaat" },
         { val: "Hadith", text: "Mustalah Ul Hadith (Mukhtasar)" },
-        { val: "Tafseer", text: "Usool At Tafseer" },
-        { val: "Nikah wat Talaaq", text: "Fiqh - Kitabun Nikah wat Talaaq" },
+        { val: "Usool-Tafseer", text: "Usool At Tafseer" },
+        { val: "Nikah-Talaaq", text: "Fiqh - Kitabun Nikah wat Talaaq" },
         { val: "Ilhad", text: "Ilhad (atheism)" },
-        { val: "Usool Al Fiqh", text: "Usool Al Fiqh" },
-        { val: "Kitabul Buyoo", text: "Fiqh - Kitabul Buyoo" }        
+        { val: "Usool-Fiqh", text: "Usool Al Fiqh" },
+        { val: "Buyoo", text: "Fiqh - Kitabul Buyoo" }        
     ]
 };
+
 
 const levelSelect = document.getElementById('targetLevel');
 const subjectSelect = document.getElementById('noteSubject');
@@ -360,7 +368,7 @@ if (uploadForm) {
                         alert("Alhamdulillah! Level " + level + " Notes have been uploaded.");
                         
                         setTimeout(() => {
-                            window.location.href = "explore-notes.html";
+              window.location.href = "explore-notes.html";
                         }, 800);
                         
                     } catch (dbError) {
@@ -373,6 +381,7 @@ if (uploadForm) {
         );
     });
 }
+
 </script>
 
 </body>
