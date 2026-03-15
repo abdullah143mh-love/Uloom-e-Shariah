@@ -253,12 +253,13 @@ window.togglePasswordVisibility = function(inputId, icon) {
     const passwordInput = document.getElementById(inputId);
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        icon.innerText = "visibility"; // Aankh khuli dikhayega
+        icon.innerText = "visibility";
     } else {
         passwordInput.type = "password";
-        icon.innerText = "visibility_off"; // Aankh par line dikhayega
+        icon.innerText = "visibility_off";
     }
 };
+
 
 </script>
 
