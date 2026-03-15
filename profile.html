@@ -248,6 +248,20 @@
       localStorage.removeItem('loggedInUser');
       window.location.replace("login.html");
   });
+  
+  // Profile.html ki script mein jahan UI update ho rahi hai
+if (loggedInUser.role === "admin") {
+    const adminBtn = document.createElement('button');
+    adminBtn.className = "auth-btn";
+    adminBtn.style.background = "#333";
+    adminBtn.style.marginTop = "10px";
+    adminBtn.innerText = "Open Admin Panel";
+    adminBtn.onclick = () => window.location.href = 'admin-panel.html';
+    
+    // Is button ko "Go to Home" ke upar insert kar dein
+    document.querySelector('.profile-card').insertBefore(adminBtn, document.querySelector('.auth-btn'));
+}
+
 </script>
 
 </body>
