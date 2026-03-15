@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- 3. AUTH UI ---
+  // --- 3. AUTH UI ---
 function initAuthUI() {
     const user = getLoggedInUser();
     
@@ -31,11 +31,12 @@ function initAuthUI() {
     const userLinks = document.querySelectorAll('.user-only');
     const navUsername = document.getElementById('navUsername');
     const navAvatar = document.getElementById('navAvatar');
-
+    const welcomeUser = document.getElementById('welcomeUser'); // <--- Ye line add karein
     if (user) {
         // User logged in hai
         if (navUsername) navUsername.textContent = user.name;
         if (navAvatar) navAvatar.textContent = user.name.charAt(0).toUpperCase();
+if (welcomeUser) welcomeUser.textContent = `Assalamualaikum, ${user.name}!`;
 
         guestLinks.forEach(link => link.style.display = 'none');
         userLinks.forEach(link => link.style.display = 'flex');
@@ -46,6 +47,16 @@ function initAuthUI() {
         guestLinks.forEach(link => link.style.display = 'flex');
         userLinks.forEach(link => link.style.display = 'none');
 
+            // Thodi styling letter ke liye (Optional: Style section me bhi dal sakte hain)
+            navAvatar.style.background = "#c1d9e6"; 
+            navAvatar.style.color = "white";
+            navAvatar.style.borderRadius = "50%";
+            navAvatar.style.width = "25px";
+            navAvatar.style.height = "25px";
+            navAvatar.style.display = "flex";
+            navAvatar.style.alignItems = "center";
+            navAvatar.style.justifyContent = "center";
+            navAvatar.style.fontWeight = "bold";
         // Proteced pages ki list
         const protectedPages = ["level2.html", "level3.html", "profile.html", "settings.html"];
         if (protectedPages.includes(currentPage)) {
@@ -56,12 +67,13 @@ function initAuthUI() {
 
 
 
+
 // --- 4. DYNAMIC PROGRESS & AUTO-UPGRADE ---
 async function updateHomeProgress() {
     const pageSubjects = {
         "index.html": ["Taharah", "Tafseer", "Aqeedah", "Salaat", "Sirat"],
         "level2.html": ["Aqeedah-Tauheed", "Tafseer-Modouee", "Fiqh-Master", "Dawat"],
-        "level3.html": ["L3-Ikhlaq", "L3-Shubuhaat", "L3-Hadith", "L3-UsoolTafseer", "L3-Nikah", "L3-Ilhad", "L3-UsoolFiqh", "L3-Buyoo"],
+        "level3.html": ["L3-Ikhlaq", "L3-Shubuhaat", "L3-Hadith", "L3-UsoolTafseer", "L3-NikahwaTalaaq", "L3-Ilhad", "L3-UsoolFiqh", "L3-KitabulBuyoo"],
         "fiqh-books.html": ["Fiqh-Janaiz", "Fiqh-Zakaat", "Fiqh-Rozah", "Fiqh-Hajj", "Fiqh-Jihaad"]
     };
 
@@ -189,4 +201,4 @@ document.addEventListener('click', (e) => {
         window.location.href = "index.html";
     }
 });
-            
+    
