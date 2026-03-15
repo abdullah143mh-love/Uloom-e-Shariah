@@ -124,13 +124,6 @@
 </section>
 
 <script src="script.js"></script>
-<script>
-    // Dinamic Back Link Logic
-    // Taki Level 2 wala user apne hi homepage par wapas jaye
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-    const backBtn = document.getElementById('backToHome');
-    if(user && user.level == 2) backBtn.href = "level2.html";
-    if(user && user.level == 3) backBtn.href = "level3.html";
-</script>
+
 </body>
 </html>
